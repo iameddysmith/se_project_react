@@ -1,0 +1,45 @@
+.modal__open-preview {
+  width: 498px;
+  height: 610px;
+}
+
+.modal__content_type_image {
+  padding: 0;
+}
+
+.modal__image {
+  height: 100%;
+  width: 100%;
+}
+
+.modal__caption {
+  font-family: "Cabinet-Bold", sans-serif;
+  font-weight: 700;
+  line-height: 1.2;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 24px;
+  text-align: left;
+  margin: 20px 0 0 32px;
+}
+
+.modal__weather {
+  font-family: "Cabinet-Bold", sans-serif;
+  font-weight: 700;
+  line-height: 1.2;
+  font-size: 20px;
+  margin: 0;
+  padding: 12px 0px 32px 32px;
+}
+
+.modal__close_btn-light {
+  background-image: url("../../assets/close_btn_light.svg");
+  position: absolute;
+  top: 20px;
+  right: 28px;
+  width: 16px;
+  height: 16px;
+  border: 0;
+  cursor: pointer;
+  background-color: transparent;
+}

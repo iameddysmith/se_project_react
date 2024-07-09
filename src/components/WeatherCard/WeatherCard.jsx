@@ -1,13 +1,24 @@
 import "./WeatherCard.css";
-import { weatherConditions } from "../../utils/constants.js";
+import {
+  weatherConditions,
+  defaultWeatherConditions,
+} from "../../utils/constants.js";
 
-function WeatherCard({ weatherData, selectedCondition }) {
-  const weather = weatherConditions.find(
-    (item) => item.name === selectedCondition
-  );
+function WeatherCard({ weatherData }) {
+  const weather = weatherConditions.filter((option) => {
+    return (
+      option.isDay === weatherData.isDay &&
+      option.condition.includes(weatherData.condition)
+    );
+  });
 
-  if (!weather) {
-    return <div>Condition not found</div>;
+  let weatherOption;
+
+  if (weather.length === 0) {
+    weatherOption =
+      defaultWeatherConditions[weatherData.isDay ? "day" : "night"];
+  } else {
+    weatherOption = weather[0];
   }
 
   return (
@@ -15,8 +26,8 @@ function WeatherCard({ weatherData, selectedCondition }) {
       <h1 className="weather__card-text">{weatherData.temp.F} &deg; F</h1>
       <img
         className="weather__card-img"
-        src={weather.image}
-        alt={weather.weather || "weather"}
+        src={weatherOption.image}
+        alt={weatherOption.name || "weather"}
       />
     </section>
   );

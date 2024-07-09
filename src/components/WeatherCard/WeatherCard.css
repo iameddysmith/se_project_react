@@ -1,5 +1,8 @@
 .weather__card {
   position: relative;
+  font-family: "Cabinet-Bold", sans-serif;
+  font-weight: 700;
+  line-height: 1.2;
 }
 
 .weather__card-img {
@@ -10,6 +13,7 @@
   width: 100%;
   display: flex;
   border-radius: 12px;
+  margin-bottom: 40px;
 }
 
 .weather__card-text {

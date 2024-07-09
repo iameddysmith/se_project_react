@@ -1,0 +1,180 @@
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #0000004d;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s 0.5s, opacity 0.5s linear;
+  font-family: "Cabinet-Bold", sans-serif;
+}
+
+.modal__open {
+  visibility: visible;
+  opacity: 1;
+  transition: visibility 0s, opacity 0.3s linear;
+}
+
+.modal__title {
+  margin-bottom: 24px;
+  font-size: 16px;
+  line-height: 1.2;
+}
+
+.modal__label {
+  font-size: 16px;
+  line-height: 1.2;
+}
+
+.modal__close_btn {
+  background-image: url("../../assets/close_btn_dark.svg");
+  position: absolute;
+  top: 20px;
+  right: 28px;
+  width: 16px;
+  height: 16px;
+  border: 0;
+  cursor: pointer;
+  background-color: transparent;
+}
+
+.modal__content {
+  background-color: #fff;
+  position: relative;
+  padding: 28px 28px 36px;
+  max-width: 496px;
+  box-sizing: border-box;
+  width: 100%;
+  border-radius: 20px;
+}
+
+.modal__form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.modal__form-input {
+  display: block;
+  border: 0;
+  border-bottom: 1px solid #000;
+  width: 100%;
+  font-size: 16px;
+}
+
+.modal__form-input:focus {
+  outline: none;
+}
+
+.modal__input::placeholder {
+  color: rgba(0, 0, 0, 0.5);
+  font-family: "Cabinet-Bold", sans-serif;
+  font-size: 16px;
+  line-height: 1.2;
+  padding: 0;
+  text-align: left;
+}
+
+.modal__radio-btns {
+  border: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal__radio-input {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  margin-bottom: 10px;
+  border: 1px solid #000;
+  border-radius: 50%;
+  outline: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+}
+
+.modal__radio-input:checked::before {
+  background-color: #000;
+  border-color: #000;
+}
+
+.modal__radio-input::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: transparent;
+  transition: background-color 0.2s ease;
+  cursor: pointer;
+}
+
+.modal__legend {
+  font-size: 16px;
+  margin-bottom: 12px;
+}
+
+.modal__label_type_radio {
+  display: flex;
+  gap: 5px;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.modal__label_type_radio.checked {
+  color: #000;
+}
+
+.modal__save-button {
+  background-color: #000;
+  color: #fff;
+  width: 124px;
+  height: 36px;
+  margin-top: 32px;
+  border-radius: 4px;
+  cursor: pointer;
+  border: 0;
+}
+
+.modal__save-button:hover {
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.modal__save-button:disabled {
+  background-color: rgba(0, 0, 0, 0.3);
+  border: 0;
+}
+
+.modal__image {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.modal__form-input-error {
+  color: #ff4d00;
+  font-family: "Cabinet-Bold", sans-serif;
+  font-weight: 700;
+  line-height: 1.2;
+  min-height: 39px;
+  max-width: 440px;
+  transition: visibility 0s 0.3s, opacity 0.5s linear;
+  visibility: hidden;
+  opacity: 0;
+}
+
+.modal__form-input-error_visible {
+  opacity: 1;
+  visibility: visible;
+  transition: visibility 0s, opacity 0.3s linear;
+}
+
+.modal__form-input_type_error {
+  border-bottom-color: #ff4d00;
+}

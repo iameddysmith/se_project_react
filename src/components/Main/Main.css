@@ -1,7 +1,25 @@
 .weather__wear-text {
-  font-size: 25px;
+  font-size: 20px;
   line-height: 1.2;
-  margin: 0;
+  margin: 0 0 34px 0;
   top: 20px;
   left: 16px;
+  font-family: "Cabinet-Bold", sans-serif;
+  font-weight: 700;
+}
+
+.cards__list {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  padding: 0;
+  margin: 0 auto;
+  max-width: 1360px;
+  list-style-type: none;
+}
+
+@media screen and (max-width: 320px) {
+  .cards__list {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
