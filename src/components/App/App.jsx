@@ -43,7 +43,7 @@ function App() {
       validatorRef.current = new FormValidator(settings, formRef.current);
       validatorRef.current.enableValidation();
     }
-  }, []);
+  }, [activeModal]);
 
   const handleWeatherTypeChange = (event) => {
     setWeatherType(event.target.value);
