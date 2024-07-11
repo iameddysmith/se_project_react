@@ -5,13 +5,6 @@ function ModalWithForm({ children, modalTitle, activeModal, onClose }) {
   const modalRef = useRef();
 
   useEffect(() => {
-    // esc close
-    const handleKeyDown = (event) => {
-      if (event.key === "Escape") {
-        onClose();
-      }
-    };
-
     // click close
     const handleClickOutside = (event) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
@@ -19,18 +12,16 @@ function ModalWithForm({ children, modalTitle, activeModal, onClose }) {
       }
     };
 
-    document.addEventListener("keydown", handleKeyDown);
     document.addEventListener("mousedown", handleClickOutside);
 
     return () => {
-      document.removeEventListener("keydown", handleKeyDown);
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [onClose]);
 
   return (
     <div
-      className={`modal ${activeModal === "add-garment" ? "modal__open" : ""}`}
+      className={`modal ${activeModal === "add-garment" ? "modal_open" : ""}`}
     >
       <div className="modal__content" ref={modalRef}>
         <h2 className="modal__title">{modalTitle}</h2>

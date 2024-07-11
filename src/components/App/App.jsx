@@ -1,14 +1,14 @@
 import "../../vendor/fonts.css";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import "./App.css";
 import Header from "../Header/Header";
 import Main from "../Main/Main";
 import ModalWithForm from "../ModalWithForm/ModalWithForm";
 import ItemModal from "../ItemModal/ItemModal";
 import Footer from "../Footer/Footer";
-import FormValidator from "../../utils/FormValidator";
 import { getCurrentWeather, processWeather } from "../../utils/WeatherApi";
-import { coordinates, APIkey, settings } from "../../utils/constants";
+import { coordinates, APIkey } from "../../utils/constants";
+import { useFormAndValidation } from "../../hooks/useFormAndValidation";
 
 function App() {
   const [weatherData, setWeatherData] = useState({
@@ -21,39 +21,60 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [weatherType, setWeatherType] = useState("");
-  const formRef = useRef(null);
-  const validatorRef = useRef(null);
+  const [radioError, setRadioError] = useState(false);
+  const [inputsValid, setInputsValid] = useState(false);
+
+  const { values, handleChange, errors, isValid, resetForm } =
+    useFormAndValidation();
 
   useEffect(() => {
     getCurrentWeather(coordinates, APIkey)
       .then((data) => {
         const filteredData = processWeather(data);
         setWeatherData(filteredData);
-        setIsLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching weather:", error);
         setError(error);
+      })
+      .finally(() => {
         setIsLoading(false);
       });
   }, []);
 
   useEffect(() => {
-    if (formRef.current) {
-      validatorRef.current = new FormValidator(settings, formRef.current);
-      validatorRef.current.enableValidation();
-    }
-  }, [activeModal]);
+    // check if name and URL are valid before flagging radio validation
+    const nameValid = !errors.name && values.name;
+    const urlValid = !errors.imageUrl && values.imageUrl;
 
-  const handleWeatherTypeChange = (event) => {
-    setWeatherType(event.target.value);
+    if (nameValid && urlValid) {
+      setInputsValid(true);
+      setRadioError(!weatherType);
+    } else {
+      setInputsValid(false);
+      setRadioError(false);
+    }
+  }, [values, errors, weatherType]);
+
+  const handleWeatherTypeChange = (e) => {
+    setWeatherType(e.target.value);
+    handleChange(e);
+    if (inputsValid) {
+      setRadioError(false);
+    }
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    if (validatorRef.current.isFormValid()) {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (!weatherType) {
+      setRadioError(true);
+      return;
+    }
+
+    if (isValid && weatherType) {
       closeActiveModal();
-      formRef.current.reset();
+      resetForm();
       setWeatherType("");
     } else {
       console.log("Form error");
@@ -71,7 +92,24 @@ function App() {
 
   const closeActiveModal = () => {
     setActiveModal("");
+    setRadioError(false);
   };
+
+  useEffect(() => {
+    if (!activeModal) return;
+
+    const handleEscClose = (e) => {
+      if (e.key === "Escape") {
+        closeActiveModal();
+      }
+    };
+
+    document.addEventListener("keydown", handleEscClose);
+
+    return () => {
+      document.removeEventListener("keydown", handleEscClose);
+    };
+  }, [activeModal]);
 
   if (isLoading) {
     return <div>Fetching Location...</div>;
@@ -94,35 +132,63 @@ function App() {
         onClose={closeActiveModal}
         className="modal__title"
       >
-        <form ref={formRef} className="modal__form" onSubmit={handleSubmit}>
+        <form className="modal__form" onSubmit={handleSubmit}>
           <label htmlFor="name" className="modal__label">
             Name{" "}
             <input
               type="text"
-              className="modal__form-input"
+              className={`modal__form-input ${
+                errors.name ? "modal__form-input_type_error" : ""
+              }`}
               id="name"
               name="name"
               placeholder="Name"
               minLength="2"
               maxLength="40"
               required
+              value={values.name || ""}
+              onChange={handleChange}
             />
           </label>
-          <span className="modal__form-input-error" id="name-error"></span>
+          <span
+            className={`modal__form-input-error ${
+              errors.name ? "modal__form-input-error_visible" : ""
+            }`}
+            id="name-error"
+          >
+            {errors.name}
+          </span>
           <label htmlFor="imageUrl" className="modal__label">
             Image{" "}
             <input
               type="url"
-              className="modal__form-input"
+              className={`modal__form-input ${
+                errors.imageUrl ? "modal__form-input_type_error" : ""
+              }`}
               id="imageUrl"
               name="imageUrl"
               placeholder="Image URL"
               required
+              value={values.imageUrl || ""}
+              onChange={handleChange}
             />
           </label>
-          <span className="modal__form-input-error" id="imageUrl-error"></span>
+          <span
+            className={`modal__form-input-error ${
+              errors.imageUrl ? "modal__form-input-error_visible" : ""
+            }`}
+            id="imageUrl-error"
+          >
+            {errors.imageUrl}
+          </span>
           <fieldset className="modal__radio-btns">
-            <legend className="modal__legend">Select the weather type</legend>
+            <legend
+              className={`modal__legend ${
+                radioError ? "modal__legend_type_error" : ""
+              }`}
+            >
+              Select the weather type
+            </legend>
             <label
               htmlFor="hot"
               className={`modal__label modal__label_type_radio ${
@@ -135,6 +201,7 @@ function App() {
                 id="hot"
                 name="weatherType"
                 value="hot"
+                required
                 checked={weatherType === "hot"}
                 onChange={handleWeatherTypeChange}
               />
@@ -152,6 +219,7 @@ function App() {
                 id="warm"
                 name="weatherType"
                 value="warm"
+                required
                 checked={weatherType === "warm"}
                 onChange={handleWeatherTypeChange}
               />
@@ -169,20 +237,17 @@ function App() {
                 id="cold"
                 name="weatherType"
                 value="cold"
+                required
                 checked={weatherType === "cold"}
                 onChange={handleWeatherTypeChange}
               />
               Cold
             </label>
           </fieldset>
-          <span
-            className="modal__form-input-error"
-            id="weatherType-error"
-          ></span>
           <button
             type="submit"
             className="modal__save-button"
-            disabled={!validatorRef.current?.isFormValid()}
+            disabled={!isValid || radioError}
           >
             Add garment
           </button>

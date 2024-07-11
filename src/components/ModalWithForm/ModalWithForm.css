@@ -14,7 +14,7 @@
   font-family: "Cabinet-Bold", sans-serif;
 }
 
-.modal__open {
+.modal_open {
   visibility: visible;
   opacity: 1;
   transition: visibility 0s, opacity 0.3s linear;
@@ -177,4 +177,10 @@
 
 .modal__form-input_type_error {
   border-bottom-color: #ff4d00;
+}
+
+.modal__legend_type_error {
+  color: #ff4d00;
+  transition: color 0.3s ease;
+  font-weight: 700;
 }
