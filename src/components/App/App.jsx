@@ -116,7 +116,7 @@ function App() {
       <ModalWithForm
         modalTitle="New garment"
         buttonText="Add garment"
-        activeModal={activeModal}
+        isOpen={activeModal === "add-garment"}
         onClose={closeActiveModal}
         className="modal__title"
         onSubmit={handleSubmit}
@@ -240,10 +240,11 @@ function App() {
         </fieldset>
       </ModalWithForm>
       <ItemModal
-        activeModal={activeModal}
+        isOpen={activeModal === "preview"}
         card={selectedCard}
         onClose={closeActiveModal}
       />
+
       <Footer />
     </div>
   );

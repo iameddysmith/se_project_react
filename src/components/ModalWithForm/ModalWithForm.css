@@ -1,3 +1,21 @@
+@keyframes horizontal-shaking {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(4px);
+  }
+  50% {
+    transform: translateX(-4px);
+  }
+  75% {
+    transform: translateX(4px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
 .modal {
   position: fixed;
   top: 0;
@@ -183,6 +201,7 @@
   color: #ff4d00;
   transition: font-weight 0.3s ease, color 0.4s linear;
   font-weight: 700;
+  animation: horizontal-shaking 0.35s 1;
 }
 
 .modal__legend_type_error-clear {

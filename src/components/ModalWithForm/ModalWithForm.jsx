@@ -4,14 +4,13 @@ import "./ModalWithForm.css";
 function ModalWithForm({
   modalTitle,
   buttonText,
-  activeModal,
+  isOpen,
   onClose,
   className,
   onSubmit,
   isValid,
   children,
 }) {
-  // alt close modal
   useEffect(() => {
     const handleEscClose = (e) => {
       if (e.key === "Escape") {
@@ -25,22 +24,19 @@ function ModalWithForm({
       }
     };
 
-    if (activeModal) {
+    if (isOpen) {
       document.addEventListener("keydown", handleEscClose);
       document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("keydown", handleEscClose);
-      document.removeEventListener("mousedown", handleClickOutside);
     }
 
     return () => {
       document.removeEventListener("keydown", handleEscClose);
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [activeModal, onClose]);
+  }, [isOpen, onClose]);
 
   return (
-    <div className={`modal ${activeModal ? "modal_open" : ""}`}>
+    <div className={`modal ${isOpen ? "modal_open" : ""}`}>
       <div className={`modal__content ${className}`}>
         <button
           onClick={onClose}

@@ -1,9 +1,34 @@
+import React, { useEffect } from "react";
 import "./ItemModal.css";
 
-function ItemModal({ activeModal, onClose, card }) {
+function ItemModal({ isOpen, onClose, card }) {
+  useEffect(() => {
+    const handleEscClose = (e) => {
+      if (e.key === "Escape") {
+        onClose();
+      }
+    };
+
+    const handleClickOutside = (e) => {
+      if (e.target.closest(".modal__content") === null) {
+        onClose();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("keydown", handleEscClose);
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("keydown", handleEscClose);
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen, onClose]);
+
   return (
-    <div className={`modal ${activeModal === "preview" && "modal_open"}`}>
-      <div className="modal__content modal__content_type_image modal_open-preview">
+    <div className={`modal ${isOpen ? "modal_open" : ""}`}>
+      <div className="modal__content modal__content_type_image">
         <button
           onClick={onClose}
           className="modal__close_btn modal__close_btn-light"
