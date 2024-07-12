@@ -1,36 +1,63 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import "./ModalWithForm.css";
 
-function ModalWithForm({ children, modalTitle, activeModal, onClose }) {
-  const modalRef = useRef();
-
+function ModalWithForm({
+  modalTitle,
+  buttonText,
+  activeModal,
+  onClose,
+  className,
+  onSubmit,
+  isValid,
+  children,
+}) {
+  // alt close modal
   useEffect(() => {
-    // click close
-    const handleClickOutside = (event) => {
-      if (modalRef.current && !modalRef.current.contains(event.target)) {
+    const handleEscClose = (e) => {
+      if (e.key === "Escape") {
         onClose();
       }
     };
 
-    document.addEventListener("mousedown", handleClickOutside);
+    const handleClickOutside = (e) => {
+      if (e.target.closest(".modal__content") === null) {
+        onClose();
+      }
+    };
+
+    if (activeModal) {
+      document.addEventListener("keydown", handleEscClose);
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("keydown", handleEscClose);
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
 
     return () => {
+      document.removeEventListener("keydown", handleEscClose);
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [onClose]);
+  }, [activeModal, onClose]);
 
   return (
-    <div
-      className={`modal ${activeModal === "add-garment" ? "modal_open" : ""}`}
-    >
-      <div className="modal__content" ref={modalRef}>
-        <h2 className="modal__title">{modalTitle}</h2>
+    <div className={`modal ${activeModal ? "modal_open" : ""}`}>
+      <div className={`modal__content ${className}`}>
         <button
           onClick={onClose}
           className="modal__close_btn"
           type="button"
         ></button>
-        {children}
+        <h2 className="modal__title">{modalTitle}</h2>
+        <form className="modal__form" onSubmit={onSubmit}>
+          {children}
+          <button
+            type="submit"
+            className="modal__save-button"
+            disabled={!isValid}
+          >
+            {buttonText}
+          </button>
+        </form>
       </div>
     </div>
   );

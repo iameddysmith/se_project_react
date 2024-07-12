@@ -181,6 +181,12 @@
 
 .modal__legend_type_error {
   color: #ff4d00;
-  transition: color 0.3s ease;
+  transition: font-weight 0.3s ease, color 0.4s linear;
   font-weight: 700;
+}
+
+.modal__legend_type_error-clear {
+  color: #000;
+  transition: color 0.8s linear, font-weight 0.2s ease;
+  font-weight: 500;
 }
