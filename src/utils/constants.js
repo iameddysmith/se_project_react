@@ -16,7 +16,7 @@ export const weatherConditions = [
   {
     isDay: true,
     name: "Clouds",
-    condition: "clouds",
+    condition: ["clouds", "haze"],
     image: new URL("../assets/weathercards/day/day_cloudy.png", import.meta.url)
       .href,
   },
@@ -60,7 +60,7 @@ export const weatherConditions = [
   {
     isDay: false,
     name: "Clouds",
-    condition: "clouds",
+    condition: ["clouds", "haze"],
     image: new URL(
       "../assets/weathercards/night/night_cloudy.png",
       import.meta.url

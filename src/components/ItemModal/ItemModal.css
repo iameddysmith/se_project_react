@@ -43,3 +43,15 @@
   cursor: pointer;
   background-color: transparent;
 }
+
+.modal__delete-btn {
+  position: absolute;
+  right: 25px;
+  color: #ff4d00;
+  font-family: "Cabinet-Bold", sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  border: 0;
+  background-color: #fff;
+  bottom: 70px;
+}

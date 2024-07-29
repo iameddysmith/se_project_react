@@ -9,17 +9,11 @@
 }
 
 .cards__list {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  display: flex;
+  flex-wrap: wrap;
   gap: 20px;
   padding: 0;
   margin: 0 auto;
   max-width: 1360px;
   list-style-type: none;
-}
-
-@media screen and (max-width: 320px) {
-  .cards__list {
-    grid-template-columns: repeat(2, 1fr);
-  }
 }

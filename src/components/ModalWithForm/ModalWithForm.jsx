@@ -40,7 +40,7 @@ function ModalWithForm({
       <div className={`modal__content ${className}`}>
         <button
           onClick={onClose}
-          className="modal__close_btn"
+          className="modal__close_btn modal__close_btn-dark"
           type="button"
         ></button>
         <h2 className="modal__title">{modalTitle}</h2>

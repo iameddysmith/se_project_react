@@ -19,19 +19,6 @@
   margin: 0;
 }
 
-.header__add-clothes-btn {
-  margin-left: auto;
-  margin: 0 20px 0 auto;
-  border: 0;
-  font-size: 20px;
-  line-height: 1.2;
-  cursor: pointer;
-  font-family: "Cabinet-Bold", sans-serif;
-  font-weight: 700;
-  line-height: 1.2;
-  background-color: transparent;
-}
-
 .header__user-container {
   display: flex;
   align-items: center;
@@ -47,4 +34,27 @@
   margin: 0;
   font-size: 20px;
   line-height: 1.2;
+}
+
+.header__btn-container {
+  margin: 0 0 0 auto;
+  display: flex;
+  align-items: center;
+}
+
+.header__add-clothes-btn {
+  border: 0;
+  font-size: 20px;
+  line-height: 1.2;
+  cursor: pointer;
+  font-family: "Cabinet-Bold", sans-serif;
+  font-weight: 700;
+  line-height: 1.2;
+  background-color: transparent;
+  padding: 0 20px;
+}
+
+.header__url {
+  text-decoration: none;
+  color: #000;
 }

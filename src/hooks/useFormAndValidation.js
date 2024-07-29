@@ -8,9 +8,20 @@ export function useFormAndValidation() {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setValues({ ...values, [name]: type === "checkbox" ? checked : value });
-    setErrors({ ...errors, [name]: e.target.validationMessage });
-    setIsTouched({ ...isTouched, [name]: true });
+    setValues((prevValues) => ({
+      ...prevValues,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+
+    const form = e.target.closest("form");
+    if (form) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        [name]: e.target.validationMessage,
+      }));
+      setIsTouched((prevTouched) => ({ ...prevTouched, [name]: true }));
+      setIsValid(form.checkValidity());
+    }
   };
 
   const resetForm = useCallback(
@@ -19,14 +30,18 @@ export function useFormAndValidation() {
       setErrors(newErrors);
       setIsValid(newIsValid);
       setIsTouched({});
+      const form = document.querySelector("form");
+      if (form) {
+        setIsValid(form.checkValidity());
+      }
     },
-    [setValues, setErrors, setIsValid]
+    []
   );
 
   useEffect(() => {
     const form = document.querySelector("form");
     setIsValid(form ? form.checkValidity() : false);
-  }, [values]);
+  }, [values, errors, isTouched]);
 
   return {
     values,

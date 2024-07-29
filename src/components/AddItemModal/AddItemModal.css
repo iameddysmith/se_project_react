@@ -36,7 +36,6 @@
   visibility: visible;
   opacity: 1;
   transition: visibility 0s, opacity 0.3s linear;
-  z-index: 999;
 }
 
 .modal__title {
@@ -178,8 +177,8 @@
 
 .modal__form-input-error {
   color: #ff4d00;
-  font-family: "Cabinet-Bold", sans-serif;
-  font-weight: 700;
+  font-size: 14px;
+  font-family: "Cabinet-Medium", sans-serif;
   line-height: 1.2;
   min-height: 39px;
   max-width: 440px;

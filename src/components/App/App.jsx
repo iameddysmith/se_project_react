@@ -2,14 +2,18 @@ import React, { useEffect, useState } from "react";
 import "./App.css";
 import Header from "../Header/Header";
 import Main from "../Main/Main";
-import ModalWithForm from "../ModalWithForm/ModalWithForm";
+import AddItemModal from "../AddItemModal/AddItemModal";
 import ItemModal from "../ItemModal/ItemModal";
 import Footer from "../Footer/Footer";
 import { getCurrentWeather, processWeather } from "../../utils/WeatherApi";
 import { coordinates, APIkey } from "../../utils/constants";
-import { useFormAndValidation } from "../../hooks/useFormAndValidation";
+import { CurrentTemperatureUnitContext } from "../../contexts/CurrentTemperatureUnitContext";
+import { getItems, postItems, deleteItem } from "../../utils/AddItemApi";
+import { Routes, Route } from "react-router-dom";
+import Profile from "../Profile/Profile";
 
 function App() {
+  //var
   const [weatherData, setWeatherData] = useState({
     type: "",
     temp: { F: 999, C: 999 },
@@ -19,14 +23,11 @@ function App() {
   const [selectedCard, setSelectedCard] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [weatherType, setWeatherType] = useState("");
-  const [radioError, setRadioError] = useState(false);
-  const [inputsValid, setInputsValid] = useState(false);
-  const { values, handleChange, errors, isValid, resetForm } =
-    useFormAndValidation();
+  const [currentTemperatureUnit, setCurrentTemperatureUnit] = useState("F");
+  const [clothingItems, setClothingItems] = useState([]);
 
+  //api get location
   useEffect(() => {
-    // api get location
     getCurrentWeather(coordinates, APIkey)
       .then((data) => {
         const filteredData = processWeather(data);
@@ -41,61 +42,61 @@ function App() {
       });
   }, []);
 
+  // generate cards
   useEffect(() => {
-    // check if name and URL are valid before flagging radio validation
-    const nameValid = !errors.name && values.name;
-    const urlValid = !errors.imageUrl && values.imageUrl;
+    getItems()
+      .then((data) => {
+        setClothingItems(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching items:", error);
+        setError(error);
+      });
+  }, []);
 
-    if (nameValid && urlValid) {
-      setInputsValid(true);
-      setRadioError(!weatherType);
-    } else {
-      setInputsValid(false);
-      setRadioError(false);
-    }
-  }, [values, errors, weatherType]);
-
-  // radio btn logic
-  const handleWeatherTypeChange = (e) => {
-    setWeatherType(e.target.value);
-    handleChange(e);
-    if (inputsValid) {
-      setRadioError(false);
-    }
+  //temperature unit toggle [F,C]
+  const handleToggleSwitchChange = () => {
+    setCurrentTemperatureUnit(currentTemperatureUnit === "C" ? "F" : "C");
   };
 
-  // submit modal
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    if (!weatherType) {
-      setRadioError(true);
-      return;
-    }
-
-    if (isValid && weatherType) {
-      closeActiveModal();
-      resetForm();
-      setWeatherType("");
-    } else {
-      console.log("Form error");
-    }
+  //add garment
+  const handleAddItem = (item) => {
+    postItems(item.name, item.imageUrl, item.weatherType)
+      .then((newCard) => {
+        setClothingItems([newCard, ...clothingItems]);
+        setActiveModal("");
+      })
+      .catch((err) => {
+        console.error("Error submitting:", err);
+      });
   };
 
-  // add garment modal
+  //remove garment
+  const handleDeleteItem = (item) => {
+    deleteItem(item)
+      .then((res) => {
+        const newClothingItems = clothingItems.filter(
+          (cardItem) => cardItem._id !== item._id
+        );
+        setClothingItems(newClothingItems);
+        setActiveModal("");
+      })
+      .catch((err) => console.error("Error deleting item:", err));
+  };
+
+  //open add garment
   const handleAddClick = () => {
     setActiveModal("add-garment");
   };
 
-  // image preview modal
+  //open image preview
   const handleCardClick = (card) => {
-    setActiveModal("preview");
     setSelectedCard(card);
+    setActiveModal("preview");
   };
-  // close modal
+  //close modal
   const closeActiveModal = () => {
     setActiveModal("");
-    setRadioError(false);
   };
 
   // api user feedback and error catch
@@ -104,148 +105,52 @@ function App() {
   }
 
   if (error) {
-    return <div>Error fetching weather data</div>;
+    return <div>Error fetching data</div>;
   }
 
   return (
     <div className="page">
-      <div className="page__content">
-        <Header weatherData={weatherData} handleAddClick={handleAddClick} />
-        <Main weatherData={weatherData} handleCardClick={handleCardClick} />
-      </div>
-      <ModalWithForm
-        modalTitle="New garment"
-        buttonText="Add garment"
-        isOpen={activeModal === "add-garment"}
-        onClose={closeActiveModal}
-        className="modal__title"
-        onSubmit={handleSubmit}
-        isValid={isValid && !radioError}
+      <CurrentTemperatureUnitContext.Provider
+        value={{ currentTemperatureUnit, handleToggleSwitchChange }}
       >
-        {/* garment name */}
-        <label htmlFor="name" className="modal__label">
-          Name{" "}
-          <input
-            type="text"
-            className={`modal__form-input ${
-              errors.name ? "modal__form-input_type_error" : ""
-            }`}
-            id="name"
-            name="name"
-            placeholder="Name"
-            minLength="2"
-            maxLength="40"
-            required
-            value={values.name || ""}
-            onChange={handleChange}
-          />
-        </label>
-        <span
-          className={`modal__form-input-error ${
-            errors.name ? "modal__form-input-error_visible" : ""
-          }`}
-          id="name-error"
-        >
-          {errors.name}
-        </span>
-        {/* garment image url */}
-        <label htmlFor="imageUrl" className="modal__label">
-          Image{" "}
-          <input
-            type="url"
-            className={`modal__form-input ${
-              errors.imageUrl ? "modal__form-input_type_error" : ""
-            }`}
-            id="imageUrl"
-            name="imageUrl"
-            placeholder="Image URL"
-            required
-            value={values.imageUrl || ""}
-            onChange={handleChange}
-          />
-        </label>
-        <span
-          className={`modal__form-input-error ${
-            errors.imageUrl ? "modal__form-input-error_visible" : ""
-          }`}
-          id="imageUrl-error"
-        >
-          {errors.imageUrl}
-        </span>
-        {/* radio */}
-        <fieldset className="modal__radio-btns">
-          <legend
-            className={`modal__legend ${
-              radioError
-                ? "modal__legend_type_error"
-                : "modal__legend_type_error-clear"
-            }`}
-          >
-            Select the weather type
-          </legend>
-          <label
-            htmlFor="hot"
-            className={`modal__label modal__label_type_radio ${
-              weatherType === "hot" ? "checked" : ""
-            }`}
-          >
-            <input
-              type="radio"
-              className="modal__radio-input"
-              id="hot"
-              name="weatherType"
-              value="hot"
-              required
-              checked={weatherType === "hot"}
-              onChange={handleWeatherTypeChange}
+        <div className="page__content">
+          <Header weatherData={weatherData} handleAddClick={handleAddClick} />
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <Main
+                  weatherData={weatherData}
+                  handleCardClick={handleCardClick}
+                  clothingItems={clothingItems}
+                />
+              }
             />
-            Hot
-          </label>
-          <label
-            htmlFor="warm"
-            className={`modal__label modal__label_type_radio ${
-              weatherType === "warm" ? "checked" : ""
-            }`}
-          >
-            <input
-              type="radio"
-              className="modal__radio-input"
-              id="warm"
-              name="weatherType"
-              value="warm"
-              required
-              checked={weatherType === "warm"}
-              onChange={handleWeatherTypeChange}
+            <Route
+              path="/profile"
+              element={
+                <Profile
+                  onCardClick={handleCardClick}
+                  clothingItems={clothingItems}
+                  handleAddClick={handleAddClick}
+                />
+              }
             />
-            Warm
-          </label>
-          <label
-            htmlFor="cold"
-            className={`modal__label modal__label_type_radio ${
-              weatherType === "cold" ? "checked" : ""
-            }`}
-          >
-            <input
-              type="radio"
-              className="modal__radio-input"
-              id="cold"
-              name="weatherType"
-              value="cold"
-              required
-              checked={weatherType === "cold"}
-              onChange={handleWeatherTypeChange}
-            />
-            Cold
-          </label>
-        </fieldset>
-      </ModalWithForm>
-      <ItemModal
-        isOpen={activeModal === "preview"}
-        card={selectedCard}
-        onClose={closeActiveModal}
-      />
-
-      <Footer />
+          </Routes>
+        </div>
+        <AddItemModal
+          onClose={closeActiveModal}
+          isOpen={activeModal === "add-garment"}
+          onAddItem={handleAddItem}
+        />
+        <ItemModal
+          isOpen={activeModal === "preview"}
+          card={selectedCard}
+          onClose={closeActiveModal}
+          onDeleteItem={handleDeleteItem}
+        />
+        <Footer />
+      </CurrentTemperatureUnitContext.Provider>
     </div>
   );
 }
