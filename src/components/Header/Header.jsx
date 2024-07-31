@@ -13,7 +13,7 @@ function Header({ weatherData, handleAddClick }) {
   return (
     <header className="header">
       <Link to="/">
-        <img className="header__logo" src={headerLogo} alt="App logo" />
+        <img className="header__logo" src={headerLogo} alt="WTWR logo" />
       </Link>
       <p className="header__date-and-location">
         {currentDate}, {weatherData.city}

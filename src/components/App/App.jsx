@@ -73,8 +73,10 @@ function App() {
 
   //remove garment
   const handleDeleteItem = (item) => {
+    console.log("handleDeleteItem called with:", item);
     deleteItem(item)
       .then((res) => {
+        console.log("Item deleted successfully", res);
         const newClothingItems = clothingItems.filter(
           (cardItem) => cardItem._id !== item._id
         );
@@ -94,6 +96,7 @@ function App() {
     setSelectedCard(card);
     setActiveModal("preview");
   };
+
   //close modal
   const closeActiveModal = () => {
     setActiveModal("");
@@ -148,6 +151,7 @@ function App() {
           card={selectedCard}
           onClose={closeActiveModal}
           onDeleteItem={handleDeleteItem}
+          setActiveModal={setActiveModal}
         />
         <Footer />
       </CurrentTemperatureUnitContext.Provider>

@@ -45,12 +45,7 @@
   line-height: 1.2;
 }
 
-.modal__label {
-  font-size: 16px;
-  line-height: 1.2;
-}
-
-.modal__close_btn {
+.modal__close_btn-dark {
   background-image: url("../../assets/close_btn_dark.svg");
   position: absolute;
   top: 20px;
@@ -169,11 +164,6 @@
 .modal__save-button:disabled {
   background-color: rgba(0, 0, 0, 0.3);
   border: 0;
-}
-
-.modal__image {
-  width: 100%;
-  box-sizing: border-box;
 }
 
 .modal__form-input-error {
