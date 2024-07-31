@@ -12,6 +12,7 @@
   width: 56px;
   height: 28px;
   appearance: none;
+  background-color: transparent;
 }
 
 .switch__slider {
@@ -22,28 +23,32 @@
   color: #fff;
   text-align: center;
   position: absolute;
+  transition: transform 0.3s ease;
+  transform: translateX(0);
 }
 
 .switch__slider-C {
-  left: 28px;
+  transform: translateX(28px);
 }
 
 .switch__slider-F {
-  left: -1px;
+  transform: translateX(0);
 }
 
-.switch__temp-F {
-  position: absolute;
-  top: -8px;
-  left: 10px;
-  color: #7e7e7e;
-}
-
+.switch__temp-F,
 .switch__temp-C {
   position: absolute;
   top: -8px;
-  left: 37px;
+  transition: color 0.3s ease;
   color: #7e7e7e;
+}
+
+.switch__temp-F {
+  left: 10px;
+}
+
+.switch__temp-C {
+  left: 37px;
 }
 
 .switch__active {
