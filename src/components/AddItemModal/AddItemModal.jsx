@@ -1,18 +1,27 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./AddItemModal.css";
 import ModalWithForm from "../ModalWithForm/ModalWithForm";
 import { useFormAndValidation } from "../../hooks/useFormAndValidation";
 
 const AddItemModal = ({ onClose, isOpen, onAddItem }) => {
+  const formRef = useRef();
   const { values, handleChange, errors, isValid, resetForm, setIsValid } =
-    useFormAndValidation();
+    useFormAndValidation(formRef);
   const [weatherType, setWeatherType] = useState("");
   const [radioError, setRadioError] = useState(false);
 
   useEffect(() => {
+    if (isOpen) {
+      if (formRef.current && formRef.current.resetForm) {
+        setWeatherType("");
+      }
+    }
+  }, [isOpen]);
+
+  useEffect(() => {
     const nameValid = !errors.name && values.name;
     const urlValid = !errors.imageUrl && values.imageUrl;
-    setRadioError(nameValid && urlValid && !weatherType);
+    setRadioError(!weatherType && nameValid && urlValid);
 
     setIsValid(nameValid && urlValid && weatherType);
   }, [values, errors, weatherType, setIsValid]);
@@ -23,26 +32,25 @@ const AddItemModal = ({ onClose, isOpen, onAddItem }) => {
       setRadioError(true);
       return;
     }
-    if (isValid && weatherType) {
-      onAddItem({ ...values, weatherType });
-      resetForm();
-      setWeatherType("");
-      onClose();
+    if (isValid) {
+      onAddItem({ ...values, weatherType })
+        .then(() => {
+          resetForm();
+          setWeatherType("");
+          setRadioError(false);
+          onClose();
+        })
+        .catch((err) => {
+          console.error("Error submitting:", err);
+        });
     } else {
       console.log("Form error");
     }
   };
 
-  const handleWeatherTypeChange = (e) => {
+  const handleRadioChange = (e) => {
     setWeatherType(e.target.value);
     setRadioError(false);
-    setIsValid(
-      !errors.name &&
-        values.name &&
-        !errors.imageUrl &&
-        values.imageUrl &&
-        e.target.value
-    );
   };
 
   return (
@@ -51,9 +59,9 @@ const AddItemModal = ({ onClose, isOpen, onAddItem }) => {
       buttonText="Add garment"
       isOpen={isOpen}
       onClose={onClose}
-      className="modal__title"
       onSubmit={handleAddItem}
       isValid={isValid && !radioError}
+      ref={formRef}
     >
       <label htmlFor="name" className="modal__label">
         Name{" "}
@@ -127,7 +135,7 @@ const AddItemModal = ({ onClose, isOpen, onAddItem }) => {
             value="hot"
             required
             checked={weatherType === "hot"}
-            onChange={handleWeatherTypeChange}
+            onChange={handleRadioChange}
           />
           Hot
         </label>
@@ -145,7 +153,7 @@ const AddItemModal = ({ onClose, isOpen, onAddItem }) => {
             value="warm"
             required
             checked={weatherType === "warm"}
-            onChange={handleWeatherTypeChange}
+            onChange={handleRadioChange}
           />
           Warm
         </label>
@@ -163,7 +171,7 @@ const AddItemModal = ({ onClose, isOpen, onAddItem }) => {
             value="cold"
             required
             checked={weatherType === "cold"}
-            onChange={handleWeatherTypeChange}
+            onChange={handleRadioChange}
           />
           Cold
         </label>

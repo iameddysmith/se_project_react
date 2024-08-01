@@ -48,3 +48,15 @@
 .modal__sub-caption {
   margin: 0;
 }
+
+.modal__close_btn {
+  background-image: url("../../assets/close_btn_dark.svg");
+  position: absolute;
+  top: 20px;
+  right: 28px;
+  width: 16px;
+  height: 16px;
+  border: 0;
+  cursor: pointer;
+  background-color: transparent;
+}

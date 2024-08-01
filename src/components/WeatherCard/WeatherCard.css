@@ -1,3 +1,7 @@
+.weather__temp-container {
+  position: relative;
+}
+
 .weather__card {
   position: relative;
   font-family: "Cabinet-Bold", sans-serif;
@@ -21,4 +25,15 @@
   font-size: 36px;
   position: absolute;
   margin: 20px 16px;
+  transition: opacity 0.4s ease, transform 0.4s ease, scale 0.4s ease;
+}
+
+.fade-out {
+  opacity: 0;
+  transform: translateX(-10px) scaleX(0.1);
+}
+
+.fade-in {
+  opacity: 1;
+  transform: translateX(0) scaleX(1);
 }

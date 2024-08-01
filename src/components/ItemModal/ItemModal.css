@@ -29,7 +29,7 @@
   padding: 12px 0px 32px 32px;
 }
 
-.modal__close_btn-dark {
+.modal__close_btn {
   background-image: url("../../assets/close_btn_dark.svg");
   position: absolute;
   top: 20px;

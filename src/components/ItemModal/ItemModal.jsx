@@ -45,9 +45,6 @@ function ItemModal({ isOpen, card, onClose, onDeleteItem, setActiveModal }) {
     if (isOpen) {
       document.addEventListener("keydown", handleKeyDown);
       document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("keydown", handleKeyDown);
-      document.removeEventListener("mousedown", handleClickOutside);
     }
 
     return () => {
@@ -69,7 +66,7 @@ function ItemModal({ isOpen, card, onClose, onDeleteItem, setActiveModal }) {
         >
           <button
             onClick={onClose}
-            className="modal__close_btn modal__close_btn-dark"
+            className="modal__close_btn"
             type="button"
           ></button>
           <div className="modal__image-container">

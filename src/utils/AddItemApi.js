@@ -33,6 +33,9 @@ function postItems(name, imageUrl, weather) {
     }),
   })
     .then(checkResponse)
+    .then((data) => {
+      return data;
+    })
     .catch((error) => {
       console.error("Error in postItems:", error);
       throw error;
@@ -46,4 +49,4 @@ function deleteItem(item) {
   }).then(checkResponse);
 }
 
-export { getItems, postItems, deleteItem };
+export { getItems, postItems, deleteItem, checkResponse };

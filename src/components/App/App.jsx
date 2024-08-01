@@ -13,7 +13,7 @@ import { Routes, Route } from "react-router-dom";
 import Profile from "../Profile/Profile";
 
 function App() {
-  //var
+  // var
   const [weatherData, setWeatherData] = useState({
     type: "",
     temp: { F: 999, C: 999 },
@@ -61,27 +61,25 @@ function App() {
 
   //add garment
   const handleAddItem = (item) => {
-    postItems(item.name, item.imageUrl, item.weatherType)
+    return postItems(item.name, item.imageUrl, item.weatherType)
       .then((newCard) => {
         setClothingItems([newCard, ...clothingItems]);
-        setActiveModal("");
+        closeActiveModal();
       })
       .catch((err) => {
         console.error("Error submitting:", err);
       });
   };
 
-  //remove garment
+  // remove garment
   const handleDeleteItem = (item) => {
-    console.log("handleDeleteItem called with:", item);
     deleteItem(item)
       .then((res) => {
-        console.log("Item deleted successfully", res);
         const newClothingItems = clothingItems.filter(
           (cardItem) => cardItem._id !== item._id
         );
         setClothingItems(newClothingItems);
-        setActiveModal("");
+        closeActiveModal();
       })
       .catch((err) => console.error("Error deleting item:", err));
   };
@@ -97,7 +95,7 @@ function App() {
     setActiveModal("preview");
   };
 
-  //close modal
+  // close modal
   const closeActiveModal = () => {
     setActiveModal("");
   };
