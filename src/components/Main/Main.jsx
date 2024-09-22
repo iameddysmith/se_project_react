@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import WeatherCard from "../WeatherCard/WeatherCard";
 import ItemCard from "../ItemCard/ItemCard";
 import "./Main.css";
@@ -13,6 +13,15 @@ function Main({
 }) {
   const { currentTemperatureUnit } = useContext(CurrentTemperatureUnitContext);
   const temp = weatherData?.temp?.[currentTemperatureUnit] || 999;
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (currentUser && clothingItems.length > 0) {
+      setLoading(false);
+    } else if (!currentUser) {
+      setLoading(false);
+    }
+  }, [clothingItems, currentUser]);
 
   return (
     <main>
@@ -25,7 +34,15 @@ function Main({
           Today is {temp} &deg; {currentTemperatureUnit} / You may want to wear:
         </p>
         <ul className="cards__list">
-          {clothingItems.length > 0 ? (
+          {loading ? (
+            <p className="cards__list-blank">
+              {currentUser ? "Fetching clothing items..." : "Loading..."}
+            </p>
+          ) : clothingItems.length === 0 && currentUser ? (
+            <p className="cards__list-blank">
+              No items available. Please add some items to the collection!
+            </p>
+          ) : (
             clothingItems
               .filter((item) => item.weather === weatherData.type)
               .map((item) => (
@@ -37,10 +54,6 @@ function Main({
                   currentUser={currentUser}
                 />
               ))
-          ) : (
-            <p className="cards__list-blank">
-              No items available. Please add some items to the collection!
-            </p>
           )}
         </ul>
       </section>

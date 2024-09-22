@@ -11,6 +11,8 @@ const AddItemModal = ({ onClose, isOpen, onAddItem }) => {
   const [radioError, setRadioError] = useState(false);
   const [formValidCheck, setFormValidCheck] = useState(false);
 
+  const formId = "addItemModal";
+
   useEffect(() => {
     if (isOpen) {
       resetForm();
@@ -19,7 +21,6 @@ const AddItemModal = ({ onClose, isOpen, onAddItem }) => {
     }
   }, [isOpen, resetForm]);
 
-  //prevent double spacebar as name from triggering OK validation and returning undefined
   useEffect(() => {
     const nameValid = values.name && !errors.name && values.name.trim() !== "";
     const urlValid =
@@ -64,12 +65,12 @@ const AddItemModal = ({ onClose, isOpen, onAddItem }) => {
       isValid={formValidCheck}
       ref={formRef}
     >
-      <label htmlFor="name" className="modal__label">
+      <label htmlFor={`${formId}-name`} className="modal__label">
         Name{" "}
         <input
           type="text"
-          className={"modal__form-input"}
-          id="name"
+          className="modal__form-input"
+          id={`${formId}-name`}
           name="name"
           placeholder="Name"
           minLength="2"
@@ -83,19 +84,19 @@ const AddItemModal = ({ onClose, isOpen, onAddItem }) => {
         className={`modal__form-input-error ${
           errors.name ? "modal__form-input-error_visible" : ""
         }`}
-        id="name-error"
+        id={`${formId}-name-error`}
       >
         {errors.name}
       </span>
 
-      <label htmlFor="imageUrl" className="modal__label">
+      <label htmlFor={`${formId}-imageUrl`} className="modal__label">
         Image{" "}
         <input
           type="url"
           className={`modal__form-input ${
             errors.imageUrl ? "modal__form-input_type_error" : ""
           }`}
-          id="imageUrl"
+          id={`${formId}-imageUrl`}
           name="imageUrl"
           placeholder="Image URL"
           required
@@ -107,7 +108,7 @@ const AddItemModal = ({ onClose, isOpen, onAddItem }) => {
         className={`modal__form-input-error ${
           errors.imageUrl ? "modal__form-input-error_visible" : ""
         }`}
-        id="imageUrl-error"
+        id={`${formId}-imageUrl-error`}
       >
         {errors.imageUrl}
       </span>

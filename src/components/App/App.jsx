@@ -322,6 +322,7 @@ function App() {
             card={selectedCard}
             onClose={() => setActiveModal("")}
             onDeleteItem={handleDeleteItem}
+            setActiveModal={setActiveModal}
           />
 
           <EditProfileModal

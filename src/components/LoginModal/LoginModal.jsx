@@ -8,6 +8,8 @@ const LoginModal = ({ isOpen, onClose, onLogin, onSwitchToSignUp }) => {
   const { values, handleChange, errors, isValid, resetForm } =
     useFormAndValidation(formRef);
 
+  const formId = "loginModal";
+
   const [incorrectPassword, setIncorrectPassword] = useState(false);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
@@ -59,11 +61,11 @@ const LoginModal = ({ isOpen, onClose, onLogin, onSwitchToSignUp }) => {
       isValid={isValid && !isButtonDisabled}
       ref={formRef}
     >
-      <label htmlFor="email" className="modal__label">
+      <label htmlFor={`${formId}-email`} className="modal__label">
         Email*
         <input
           type="email"
-          id="email"
+          id={`${formId}-email`}
           name="email"
           placeholder="Email"
           value={values.email || ""}
@@ -76,12 +78,13 @@ const LoginModal = ({ isOpen, onClose, onLogin, onSwitchToSignUp }) => {
         className={`modal__form-input-error ${
           errors.email ? "modal__form-input-error_visible" : ""
         }`}
+        id={`${formId}-email-error`}
       >
         {errors.email}
       </span>
 
       <label
-        htmlFor="password"
+        htmlFor={`${formId}-password`}
         className={`modal__label ${
           incorrectPassword ? "modal__label_error" : ""
         }`}
@@ -89,7 +92,7 @@ const LoginModal = ({ isOpen, onClose, onLogin, onSwitchToSignUp }) => {
         {incorrectPassword ? "Incorrect Password" : "Password*"}
         <input
           type="password"
-          id="password"
+          id={`${formId}-password`}
           name="password"
           placeholder="Password"
           value={values.password || ""}
@@ -109,6 +112,7 @@ const LoginModal = ({ isOpen, onClose, onLogin, onSwitchToSignUp }) => {
         className={`modal__form-input-error ${
           errors.password ? "modal__form-input-error_visible" : ""
         }`}
+        id={`${formId}-password-error`}
       >
         {errors.password}
       </span>

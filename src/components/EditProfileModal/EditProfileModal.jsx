@@ -8,6 +8,8 @@ const EditProfileModal = ({ isOpen, onClose, currentUser, onSave }) => {
   const { values, handleChange, errors, isValid, resetForm } =
     useFormAndValidation(formRef);
 
+  const formId = "editProfileModal";
+
   useEffect(() => {
     if (isOpen) {
       resetForm({
@@ -34,15 +36,15 @@ const EditProfileModal = ({ isOpen, onClose, currentUser, onSave }) => {
       isValid={isValid}
       ref={formRef}
     >
-      <label htmlFor="name" className="modal__label">
+      <label htmlFor={`${formId}-name`} className="modal__label">
         Name
         <input
           type="text"
-          id="name"
+          id={`${formId}-name`}
           name="name"
           value={values.name || ""}
           onChange={handleChange}
-          className={"modal__form-input"}
+          className="modal__form-input"
           placeholder="Enter your name"
           required
           minLength="2"
@@ -53,15 +55,16 @@ const EditProfileModal = ({ isOpen, onClose, currentUser, onSave }) => {
         className={`modal__form-input-error ${
           errors.name ? "modal__form-input-error_visible" : ""
         }`}
+        id={`${formId}-name-error`}
       >
         {errors.name}
       </span>
 
-      <label htmlFor="avatar" className="modal__label">
+      <label htmlFor={`${formId}-avatar`} className="modal__label">
         Avatar URL
         <input
           type="url"
-          id="avatar"
+          id={`${formId}-avatar`}
           name="avatar"
           value={values.avatar || ""}
           onChange={handleChange}
@@ -76,6 +79,7 @@ const EditProfileModal = ({ isOpen, onClose, currentUser, onSave }) => {
         className={`modal__form-input-error ${
           errors.avatar ? "modal__form-input-error_visible" : ""
         }`}
+        id={`${formId}-avatar-error`}
       >
         {errors.avatar}
       </span>

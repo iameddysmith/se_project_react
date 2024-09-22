@@ -6,7 +6,7 @@ function Sidebar({ handleProfileEdit, handleLogout }) {
   const currentUser = useContext(CurrentUserContext);
   const [isAvatarError, setIsAvatarError] = useState(false);
 
-  //extract initials if invalid URL is provided for a default avatar
+  // Extract initials if invalid URL is provided for a default avatar
   const getInitials = (name) => {
     const nameParts = name.trim().split(" ");
     const initials =
@@ -22,6 +22,10 @@ function Sidebar({ handleProfileEdit, handleLogout }) {
     }
   }, [currentUser?.avatar]);
 
+  if (!currentUser) {
+    return <p>Loading user data...</p>;
+  }
+
   return (
     <div className="sidebar">
       <div className="sidebar__user-info">
@@ -33,11 +37,11 @@ function Sidebar({ handleProfileEdit, handleLogout }) {
           <img
             className="sidebar__avatar"
             src={currentUser.avatar}
-            alt={currentUser.name}
+            alt={currentUser.name || "User"}
             onError={() => setIsAvatarError(true)}
           />
         )}
-        <p className="sidebar__username">{currentUser.name}</p>
+        <p className="sidebar__username">{currentUser.name || "User"}</p>
       </div>
       <button className="sidebar__button" onClick={handleProfileEdit}>
         Change profile data

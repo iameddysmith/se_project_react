@@ -8,6 +8,8 @@ const RegisterModal = ({ isOpen, onClose, onRegister, onSwitchToLogin }) => {
   const { values, handleChange, errors, isValid, resetForm } =
     useFormAndValidation(formRef);
 
+  const formId = "registerModal";
+
   useEffect(() => {
     if (isOpen) {
       resetForm();
@@ -33,11 +35,11 @@ const RegisterModal = ({ isOpen, onClose, onRegister, onSwitchToLogin }) => {
       isValid={isValid}
       ref={formRef}
     >
-      <label htmlFor="email" className="modal__label">
+      <label htmlFor={`${formId}-email`} className="modal__label">
         Email*
         <input
           type="email"
-          id="email"
+          id={`${formId}-email`}
           name="email"
           placeholder="Email"
           value={values.email || ""}
@@ -50,15 +52,16 @@ const RegisterModal = ({ isOpen, onClose, onRegister, onSwitchToLogin }) => {
         className={`modal__form-input-error ${
           errors.email ? "modal__form-input-error_visible" : ""
         }`}
+        id={`${formId}-email-error`}
       >
         {errors.email}
       </span>
 
-      <label htmlFor="password" className="modal__label">
+      <label htmlFor={`${formId}-password`} className="modal__label">
         Password*
         <input
           type="password"
-          id="password"
+          id={`${formId}-password`}
           name="password"
           placeholder="Password"
           minLength="2"
@@ -72,15 +75,16 @@ const RegisterModal = ({ isOpen, onClose, onRegister, onSwitchToLogin }) => {
         className={`modal__form-input-error ${
           errors.password ? "modal__form-input-error_visible" : ""
         }`}
+        id={`${formId}-password-error`}
       >
         {errors.password}
       </span>
 
-      <label htmlFor="name" className="modal__label">
+      <label htmlFor={`${formId}-name`} className="modal__label">
         Name*
         <input
           type="text"
-          id="name"
+          id={`${formId}-name`}
           name="name"
           placeholder="Name"
           minLength="2"
@@ -95,15 +99,16 @@ const RegisterModal = ({ isOpen, onClose, onRegister, onSwitchToLogin }) => {
         className={`modal__form-input-error ${
           errors.name ? "modal__form-input-error_visible" : ""
         }`}
+        id={`${formId}-name-error`}
       >
         {errors.name}
       </span>
 
-      <label htmlFor="avatar" className="modal__label">
+      <label htmlFor={`${formId}-avatar`} className="modal__label">
         Avatar URL*
         <input
           type="url"
-          id="avatar"
+          id={`${formId}-avatar`}
           name="avatar"
           placeholder="Avatar URL"
           value={values.avatar || ""}
@@ -116,6 +121,7 @@ const RegisterModal = ({ isOpen, onClose, onRegister, onSwitchToLogin }) => {
         className={`modal__form-input-error ${
           errors.avatar ? "modal__form-input-error_visible" : ""
         }`}
+        id={`${formId}-avatar-error`}
       >
         {errors.avatar}
       </span>

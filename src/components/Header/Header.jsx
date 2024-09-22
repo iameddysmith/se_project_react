@@ -21,12 +21,12 @@ function Header({
 
   //extract initials if invalid URL is provided for a default avatar
   const getInitials = (name) => {
-    const nameParts = name.trim().split(" ");
+    const nameParts = name?.trim().split(" ");
     const initials =
       nameParts.length > 1
         ? `${nameParts[0][0]}${nameParts[nameParts.length - 1][0]}`
         : nameParts[0][0];
-    return initials.toUpperCase();
+    return initials?.toUpperCase();
   };
 
   useEffect(() => {
@@ -57,15 +57,17 @@ function Header({
             </button>
             <Link to="/profile" className="header__url">
               <div className="header__user-container">
-                <p className="header__user-name">{currentUser.name}</p>
-                {isAvatarError || !currentUser.avatar ? (
+                <p className="header__user-name">
+                  {currentUser.name || "User"}
+                </p>
+                {isAvatarError || !currentUser?.avatar ? (
                   <div className="header__error-avatar">
                     {getInitials(currentUser.name || "User")}
                   </div>
                 ) : (
                   <img
                     src={currentUser.avatar}
-                    alt={currentUser.name}
+                    alt={currentUser.name || "User"}
                     className="header__avatar"
                     onError={() => setIsAvatarError(true)}
                   />
