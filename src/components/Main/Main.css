@@ -17,3 +17,8 @@
   max-width: 1360px;
   list-style-type: none;
 }
+
+.cards__list-blank {
+  font-family: "Cabinet-Medium", sans-serif;
+  color: dimgray;
+}

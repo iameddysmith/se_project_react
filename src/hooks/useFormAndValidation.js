@@ -4,23 +4,43 @@ export function useFormAndValidation(formRef) {
   const [values, setValues] = useState({});
   const [errors, setErrors] = useState({});
   const [isValid, setIsValid] = useState(false);
-  const [isTouched, setIsTouched] = useState({});
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
+    const trimmedValue = typeof value === "string" ? value.trim() : value;
+
     setValues((prevValues) => ({
       ...prevValues,
       [name]: type === "checkbox" ? checked : value,
     }));
 
-    if (formRef.current) {
+    if (
+      formRef.current &&
+      type === "text" &&
+      trimmedValue === "" &&
+      value.length > 0
+    ) {
       setErrors((prevErrors) => ({
         ...prevErrors,
-        [name]: e.target.validationMessage,
+        [name]: "Please enter a valid name.",
       }));
-      setIsTouched((prevTouched) => ({ ...prevTouched, [name]: true }));
-      setIsValid(formRef.current.checkValidity());
+    } else {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        [name]: e.target.validationMessage || "",
+      }));
     }
+
+    const formValidity = formRef.current.checkValidity();
+    const hasNoSpaceOnlyValues = Object.entries(values).every(
+      ([fieldName, fieldValue]) => {
+        if (typeof fieldValue !== "string") return true;
+        if (fieldName === name) return trimmedValue !== "";
+        return fieldValue.trim() !== "";
+      }
+    );
+
+    setIsValid(formValidity && hasNoSpaceOnlyValues);
   };
 
   const resetForm = useCallback(
@@ -28,29 +48,28 @@ export function useFormAndValidation(formRef) {
       setValues(newValues);
       setErrors(newErrors);
       setIsValid(newIsValid);
-      setIsTouched({});
-      if (formRef.current) {
-        setIsValid(formRef.current.checkValidity());
-      }
     },
-    [formRef]
+    []
   );
 
   useEffect(() => {
     if (formRef.current) {
-      setIsValid(formRef.current.checkValidity());
+      const formValidity = formRef.current.checkValidity();
+      const hasNoSpaceOnlyValues = Object.entries(values).every(
+        ([fieldName, fieldValue]) => {
+          if (typeof fieldValue !== "string") return true;
+          return fieldValue.trim() !== "";
+        }
+      );
+      setIsValid(formValidity && hasNoSpaceOnlyValues);
     }
-  }, [values, errors, isTouched, formRef]);
+  }, [values, errors]);
 
   return {
     values,
     handleChange,
     errors,
     isValid,
-    isTouched,
     resetForm,
-    setValues,
-    setIsValid,
-    setErrors,
   };
 }

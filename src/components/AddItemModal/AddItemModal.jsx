@@ -5,26 +5,29 @@ import { useFormAndValidation } from "../../hooks/useFormAndValidation";
 
 const AddItemModal = ({ onClose, isOpen, onAddItem }) => {
   const formRef = useRef();
-  const { values, handleChange, errors, isValid, resetForm, setIsValid } =
+  const { values, handleChange, errors, resetForm } =
     useFormAndValidation(formRef);
   const [weatherType, setWeatherType] = useState("");
   const [radioError, setRadioError] = useState(false);
+  const [formValidCheck, setFormValidCheck] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
-      if (formRef.current && formRef.current.resetForm) {
-        setWeatherType("");
-      }
+      resetForm();
+      setWeatherType("");
+      setFormValidCheck(false);
     }
-  }, [isOpen]);
+  }, [isOpen, resetForm]);
 
+  //prevent double spacebar as name from triggering OK validation and returning undefined
   useEffect(() => {
-    const nameValid = !errors.name && values.name;
-    const urlValid = !errors.imageUrl && values.imageUrl;
-    setRadioError(!weatherType && nameValid && urlValid);
+    const nameValid = values.name && !errors.name && values.name.trim() !== "";
+    const urlValid =
+      values.imageUrl && !errors.imageUrl && values.imageUrl.trim() !== "";
 
-    setIsValid(nameValid && urlValid && weatherType);
-  }, [values, errors, weatherType, setIsValid]);
+    setFormValidCheck(nameValid && urlValid && weatherType);
+    setRadioError(!weatherType && nameValid && urlValid);
+  }, [values, errors, weatherType]);
 
   const handleAddItem = (e) => {
     e.preventDefault();
@@ -32,7 +35,7 @@ const AddItemModal = ({ onClose, isOpen, onAddItem }) => {
       setRadioError(true);
       return;
     }
-    if (isValid) {
+    if (formValidCheck) {
       onAddItem({ ...values, weatherType })
         .then(() => {
           resetForm();
@@ -43,8 +46,6 @@ const AddItemModal = ({ onClose, isOpen, onAddItem }) => {
         .catch((err) => {
           console.error("Error submitting:", err);
         });
-    } else {
-      console.log("Form error");
     }
   };
 
@@ -60,16 +61,14 @@ const AddItemModal = ({ onClose, isOpen, onAddItem }) => {
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleAddItem}
-      isValid={isValid && !radioError}
+      isValid={formValidCheck}
       ref={formRef}
     >
       <label htmlFor="name" className="modal__label">
         Name{" "}
         <input
           type="text"
-          className={`modal__form-input ${
-            errors.name ? "modal__form-input_type_error" : ""
-          }`}
+          className={"modal__form-input"}
           id="name"
           name="name"
           placeholder="Name"
@@ -88,6 +87,7 @@ const AddItemModal = ({ onClose, isOpen, onAddItem }) => {
       >
         {errors.name}
       </span>
+
       <label htmlFor="imageUrl" className="modal__label">
         Image{" "}
         <input
@@ -111,12 +111,11 @@ const AddItemModal = ({ onClose, isOpen, onAddItem }) => {
       >
         {errors.imageUrl}
       </span>
+
       <fieldset className="modal__radio-btns">
         <legend
           className={`modal__legend ${
-            radioError
-              ? "modal__legend_type_error"
-              : "modal__legend_type_error-clear"
+            radioError ? "modal__legend_type_error" : ""
           }`}
         >
           Select the weather type

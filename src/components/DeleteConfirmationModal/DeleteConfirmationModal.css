@@ -1,8 +1,3 @@
-.modal__close_btn {
-  background: none;
-  border: none;
-}
-
 .modal__buttons {
   display: flex;
   justify-content: center;

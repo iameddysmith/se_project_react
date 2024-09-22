@@ -4,7 +4,10 @@
   align-items: center;
   width: 323px;
   font-family: "Cabinet-Bold", sans-serif;
+  font-size: 16px;
+  font-weight: 700;
   line-height: 1.2;
+  position: relative;
 }
 
 .card__image {
@@ -15,12 +18,38 @@
   cursor: pointer;
 }
 
+.card__header {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  align-items: center;
+  position: absolute;
+  padding: 0 10px;
+}
+
 .card__caption {
   color: rgba(0, 0, 0, 0.6);
-  margin-top: 15px;
-  position: absolute;
   background-color: #fff;
   font-size: 16px;
   line-height: 1.2;
   padding: 2px 12px;
+  border-radius: 4px;
+}
+
+.card__react-button {
+  background: transparent url("../../assets/card__action-heart.svg")
+    center/contain no-repeat;
+  height: 15px;
+  width: 18px;
+  border: 0;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.card__react-button:hover {
+  opacity: 0.6;
+}
+
+.card__react-button_active {
+  background-image: url("../../assets/card__action-heart-active.svg");
 }

@@ -28,6 +28,7 @@
 .header__avatar {
   width: 40px;
   height: 40px;
+  border-radius: 20px;
 }
 
 .header__user-name {
@@ -53,7 +54,50 @@
   padding: 0 20px;
 }
 
+.header__btn {
+  border: 0;
+  font-size: 20px;
+  line-height: 1.2;
+  cursor: pointer;
+  font-family: "Cabinet-Bold", sans-serif;
+  font-weight: 700;
+  background-color: transparent;
+  padding: 0 20px;
+  text-decoration: none;
+  color: #000;
+}
+
+.header__btn:hover {
+  text-decoration: underline;
+}
+
 .header__url {
   text-decoration: none;
   color: #000;
+}
+
+.header__avatar-placeholder {
+  width: 40px;
+  height: 40px;
+  background-color: #ccc;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.header__error-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #000;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

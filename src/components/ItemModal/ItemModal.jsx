@@ -1,10 +1,17 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useContext, useState, useEffect, useRef } from "react";
 import "./ItemModal.css";
 import DeleteConfirmationModal from "../DeleteConfirmationModal/DeleteConfirmationModal";
+import CurrentUserContext from "../../contexts/CurrentUserContext";
 
 function ItemModal({ isOpen, card, onClose, onDeleteItem, setActiveModal }) {
+  const currentUser = useContext(CurrentUserContext);
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const modalRef = useRef();
+
+  const isOwn = card?.owner === currentUser?._id;
+  const itemDeleteButtonClassName = `modal__delete-btn ${
+    isOwn ? "modal__delete-btn_visible" : "modal__delete-btn_hidden"
+  }`;
 
   const handleDeleteClick = () => {
     setDeleteModalOpen(true);
@@ -75,9 +82,14 @@ function ItemModal({ isOpen, card, onClose, onDeleteItem, setActiveModal }) {
           <div className="modal__footer">
             <h2 className="modal__caption">{card.name}</h2>
             <p className="modal__weather">Weather: {card.weather}</p>
-            <button className="modal__delete-btn" onClick={handleDeleteClick}>
-              Delete item
-            </button>
+            {currentUser && isOwn && (
+              <button
+                className={itemDeleteButtonClassName}
+                onClick={handleDeleteClick}
+              >
+                Delete item
+              </button>
+            )}
           </div>
         </div>
       </div>

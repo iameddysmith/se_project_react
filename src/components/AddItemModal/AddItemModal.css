@@ -120,21 +120,6 @@
   transition: background-color 0.2s ease;
 }
 
-.modal__radio-input:checked::before {
-  background-color: #000;
-  border-color: #000;
-}
-
-.modal__radio-input::before {
-  content: "";
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background-color: transparent;
-  transition: background-color 0.2s ease;
-  cursor: pointer;
-}
-
 .modal__legend {
   font-size: 16px;
   margin-bottom: 12px;
@@ -155,7 +140,6 @@
   color: #fff;
   width: 124px;
   height: 36px;
-  margin-top: 32px;
   border-radius: 4px;
   cursor: pointer;
   border: 0;
@@ -167,12 +151,6 @@
 
 .modal__save-button:disabled {
   background-color: rgba(0, 0, 0, 0.3);
-  border: 0;
-}
-
-.modal__image {
-  width: 100%;
-  box-sizing: border-box;
 }
 
 .modal__form-input-error {
@@ -182,9 +160,9 @@
   line-height: 1.2;
   min-height: 39px;
   max-width: 440px;
-  transition: visibility 0s 0.3s, opacity 0.5s linear;
   visibility: hidden;
   opacity: 0;
+  transition: visibility 0s 0.3s, opacity 0.5s linear;
 }
 
 .modal__form-input-error_visible {

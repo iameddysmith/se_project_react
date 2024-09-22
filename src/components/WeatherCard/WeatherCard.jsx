@@ -13,23 +13,20 @@ function WeatherCard({ weatherData }) {
   );
   const [fadeClass, setFadeClass] = useState("fade-in");
   const prevUnit = useRef(currentTemperatureUnit);
-  const isInitialLoad = useRef(true);
 
   useEffect(() => {
-    if (isInitialLoad.current) {
-      isInitialLoad.current = false;
-      setTemp(weatherData?.temp?.[currentTemperatureUnit] || 999);
-      return;
-    }
+    setTemp(
+      weatherData?.temp?.[currentTemperatureUnit] !== undefined
+        ? weatherData.temp[currentTemperatureUnit]
+        : 999
+    );
 
     if (currentTemperatureUnit !== prevUnit.current) {
       setFadeClass("fade-out");
       const timeout = setTimeout(() => {
-        setTemp(weatherData?.temp?.[currentTemperatureUnit] || 999);
         setFadeClass("fade-in");
+        prevUnit.current = currentTemperatureUnit;
       }, 200);
-
-      prevUnit.current = currentTemperatureUnit;
 
       return () => clearTimeout(timeout);
     }

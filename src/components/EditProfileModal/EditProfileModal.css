@@ -1,0 +1,111 @@
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #0000004d;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s 0.5s, opacity 0.5s linear;
+  font-family: "Cabinet-Bold", sans-serif;
+}
+
+.modal_open {
+  visibility: visible;
+  opacity: 1;
+  transition: visibility 0s, opacity 0.3s linear;
+}
+
+.modal__content {
+  background-color: white;
+  padding: 28px 28px 36px;
+  border-radius: 20px;
+  max-width: 496px;
+  width: 100%;
+}
+
+.modal__title {
+  margin-bottom: 24px;
+  font-size: 16px;
+  line-height: 1.2;
+}
+
+.modal__label {
+  font-size: 16px;
+  line-height: 1.2;
+}
+
+.modal__close_btn {
+  background-image: url("../../assets/close_btn_dark.svg");
+  position: absolute;
+  top: 20px;
+  right: 28px;
+  width: 16px;
+  height: 16px;
+  border: 0;
+  cursor: pointer;
+  background-color: transparent;
+}
+
+.modal__form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.modal__form-input {
+  display: block;
+  border: 0;
+  border-bottom: 1px solid #000;
+  width: 100%;
+  font-size: 16px;
+}
+
+.modal__form-input:focus {
+  outline: none;
+}
+
+.modal__form-input::placeholder {
+  color: rgba(0, 0, 0, 0.5);
+  font-size: 16px;
+}
+
+.modal__form-input-error {
+  color: #ff4d00;
+  font-size: 14px;
+  line-height: 1.2;
+  min-height: 39px;
+  max-width: 440px;
+  opacity: 0;
+  visibility: hidden;
+  transition: visibility 0s 0.3s, opacity 0.5s linear;
+}
+
+.modal__form-input-error_visible {
+  opacity: 1;
+  visibility: visible;
+  transition: visibility 0s, opacity 0.3s linear;
+}
+
+.modal__save-button {
+  background-color: #000;
+  color: #fff;
+  width: 124px;
+  height: 36px;
+  margin-top: 32px;
+  border-radius: 4px;
+  cursor: pointer;
+  border: 0;
+}
+
+.modal__save-button:hover {
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.modal__save-button:disabled {
+  background-color: rgba(0, 0, 0, 0.3);
+}
