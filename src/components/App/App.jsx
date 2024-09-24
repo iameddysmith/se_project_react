@@ -54,43 +54,17 @@ function App() {
         const filteredData = processWeather(data);
         setWeatherData(filteredData);
       })
-      .catch((error) => {
-        console.error("Error fetching weather:", error);
-      });
+      .catch(console.error);
   }, []);
 
-  // Fetch all items for logged-out users
-  const fetchAllItems = () => {
+  // Fetch all items
+  useEffect(() => {
     getItems()
       .then((data) => {
         setClothingItems(data);
       })
-      .catch((error) => {
-        console.error("Error fetching all items:", error);
-      });
-  };
-
-  // Fetch user added items for logged-in users
-  const fetchUserItems = (userId) => {
-    getItems()
-      .then((data) => {
-        const userItems = data.filter((item) => item.owner === userId);
-        setClothingItems(userItems);
-      })
-      .catch((error) => {
-        console.error("Error fetching user items:", error);
-      });
-  };
-
-  // Fetch clothing items based on if logged in
-  useEffect(() => {
-    if (isLoggedIn && currentUser) {
-      setClothingItems([]);
-      fetchUserItems(currentUser._id);
-    } else {
-      fetchAllItems();
-    }
-  }, [isLoggedIn, currentUser]);
+      .catch(console.error);
+  }, []);
 
   // Temperature unit toggle [F, C]
   const handleToggleSwitchChange = () => {
@@ -99,27 +73,23 @@ function App() {
 
   // Add garment
   const handleAddItem = (item) => {
-    return postItems(item.name, item.imageUrl, item.weatherType)
-      .then((newCard) => {
+    return postItems(item.name, item.imageUrl, item.weatherType).then(
+      (newCard) => {
         setClothingItems((prevItems) => [newCard, ...prevItems]);
         closeActiveModal();
-      })
-      .catch((err) => {
-        console.error("Error submitting:", err);
-      });
+      }
+    );
   };
 
   // Remove garment
   const handleDeleteItem = (item) => {
-    deleteItem(item)
-      .then(() => {
-        const newClothingItems = clothingItems.filter(
-          (cardItem) => cardItem._id !== item._id
-        );
-        setClothingItems(newClothingItems);
-        closeActiveModal();
-      })
-      .catch((err) => console.error("Error deleting item:", err));
+    return deleteItem(item).then(() => {
+      const newClothingItems = clothingItems.filter(
+        (cardItem) => cardItem._id !== item._id
+      );
+      setClothingItems(newClothingItems);
+      closeActiveModal();
+    });
   };
 
   // Token check for logged-in users
@@ -144,32 +114,30 @@ function App() {
 
   // Handle registration
   const handleRegister = ({ name, avatar, email, password }) => {
-    register({ name, avatar, email, password })
-      .then(() => {
-        handleLogin({ email, password });
-      })
-      .catch((err) => {
-        console.error("Registration failed:", err);
-      });
+    register({ name, avatar, email, password }).then(() => {
+      handleLogin({ email, password });
+    });
   };
 
   // Handle login
   const handleLogin = ({ email, password }) => {
-    return login({ email, password })
-      .then((res) => {
-        localStorage.setItem("jwt", res.token);
-        setToken(res.token);
-        return checkToken(res.token);
-      })
-      .then((userData) => {
-        setCurrentUser(userData);
-        setIsLoggedIn(true);
-        fetchUserItems(userData._id);
-        closeActiveModal();
-      })
-      .catch((err) => {
-        throw new Error("Incorrect email or password");
-      });
+    return (
+      login({ email, password })
+        .then((res) => {
+          localStorage.setItem("jwt", res.token);
+          setToken(res.token);
+          return checkToken(res.token);
+        })
+        .then((userData) => {
+          setCurrentUser(userData);
+          setIsLoggedIn(true);
+          closeActiveModal();
+        })
+        //this catch is needed for the Incorrect Password
+        .catch((err) => {
+          throw new Error("Incorrect email or password");
+        })
+    );
   };
 
   // Handle logout
@@ -177,7 +145,6 @@ function App() {
     localStorage.removeItem("jwt");
     setCurrentUser(null);
     setIsLoggedIn(false);
-    fetchAllItems();
     navigate("/");
   };
 
@@ -199,38 +166,22 @@ function App() {
 
   // Handle profile update
   const handleProfileUpdate = (updatedData) => {
-    return updateProfile(updatedData, token)
-      .then((updatedUser) => {
-        setCurrentUser(updatedUser);
-        closeActiveModal();
-      })
-      .catch((err) => {
-        console.error("Error updating profile:", err);
-      });
+    return updateProfile(updatedData, token).then((updatedUser) => {
+      setCurrentUser(updatedUser);
+      closeActiveModal();
+    });
   };
 
   // Handle card like
   const handleCardLike = (item) => {
-    const token = localStorage.getItem("jwt");
     const isLiked = item.likes.some((id) => id === currentUser._id);
+    const apiCall = isLiked ? removeCardLike : addCardLike;
 
-    if (!isLiked) {
-      addCardLike(item._id, token)
-        .then((updatedCard) => {
-          setClothingItems((items) =>
-            items.map((card) => (card._id === item._id ? updatedCard : card))
-          );
-        })
-        .catch((err) => console.log(err));
-    } else {
-      removeCardLike(item._id, token)
-        .then((updatedCard) => {
-          setClothingItems((items) =>
-            items.map((card) => (card._id === item._id ? updatedCard : card))
-          );
-        })
-        .catch((err) => console.log(err));
-    }
+    return apiCall(item._id, token).then((updatedCard) => {
+      setClothingItems((items) =>
+        items.map((card) => (card._id === item._id ? updatedCard : card))
+      );
+    });
   };
 
   return (
@@ -322,6 +273,7 @@ function App() {
             card={selectedCard}
             onClose={closeActiveModal}
             onDeleteItem={handleDeleteItem}
+            setActiveModal={setActiveModal}
           />
 
           <EditProfileModal
