@@ -16,9 +16,7 @@ function Main({
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (currentUser && clothingItems.length > 0) {
-      setLoading(false);
-    } else if (!currentUser) {
+    if (clothingItems.length > 0 || !currentUser) {
       setLoading(false);
     }
   }, [clothingItems, currentUser]);

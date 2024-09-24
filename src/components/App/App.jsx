@@ -22,7 +22,8 @@ import {
   removeCardLike,
 } from "../../utils/AddItemApi";
 import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
-import { register, login, checkToken } from "../../utils/auth";
+import { register, login, checkToken, updateProfile } from "../../utils/auth";
+import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
 
 function App() {
   const [weatherData, setWeatherData] = useState({
@@ -42,6 +43,9 @@ function App() {
   // Switch between login and sign-up modals
   const switchToLogin = () => setActiveModal("login");
   const switchToSignUp = () => setActiveModal("register");
+
+  // Handle modal close
+  const closeActiveModal = () => setActiveModal("");
 
   // Fetch weather data
   useEffect(() => {
@@ -90,7 +94,7 @@ function App() {
 
   // Temperature unit toggle [F, C]
   const handleToggleSwitchChange = () => {
-    setCurrentTemperatureUnit(currentTemperatureUnit === "C" ? "F" : "C");
+    setCurrentTemperatureUnit((prevUnit) => (prevUnit === "C" ? "F" : "C"));
   };
 
   // Add garment
@@ -98,7 +102,7 @@ function App() {
     return postItems(item.name, item.imageUrl, item.weatherType)
       .then((newCard) => {
         setClothingItems((prevItems) => [newCard, ...prevItems]);
-        setActiveModal("");
+        closeActiveModal();
       })
       .catch((err) => {
         console.error("Error submitting:", err);
@@ -113,7 +117,7 @@ function App() {
           (cardItem) => cardItem._id !== item._id
         );
         setClothingItems(newClothingItems);
-        setActiveModal("");
+        closeActiveModal();
       })
       .catch((err) => console.error("Error deleting item:", err));
   };
@@ -161,7 +165,7 @@ function App() {
         setCurrentUser(userData);
         setIsLoggedIn(true);
         fetchUserItems(userData._id);
-        setActiveModal("");
+        closeActiveModal();
       })
       .catch((err) => {
         throw new Error("Incorrect email or password");
@@ -195,18 +199,10 @@ function App() {
 
   // Handle profile update
   const handleProfileUpdate = (updatedData) => {
-    fetch("http://localhost:3001/users/me", {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(updatedData),
-    })
-      .then((res) => res.json())
+    return updateProfile(updatedData, token)
       .then((updatedUser) => {
         setCurrentUser(updatedUser);
-        setActiveModal("");
+        closeActiveModal();
       })
       .catch((err) => {
         console.error("Error updating profile:", err);
@@ -267,18 +263,22 @@ function App() {
               <Route
                 path="/profile"
                 element={
-                  token ? (
+                  <ProtectedRoute isLoggedIn={isLoggedIn}>
                     <Profile
                       onCardClick={handleCardClick}
-                      clothingItems={clothingItems}
+                      clothingItems={
+                        currentUser
+                          ? clothingItems.filter(
+                              (item) => item.owner === currentUser._id
+                            )
+                          : []
+                      }
                       handleAddClick={handleAddClick}
                       handleProfileEdit={handleProfileEdit}
                       handleLogout={handleLogout}
                       onCardLike={handleCardLike}
                     />
-                  ) : (
-                    <Navigate to="/" />
-                  )
+                  </ProtectedRoute>
                 }
               />
               <Route
@@ -299,20 +299,20 @@ function App() {
 
           <RegisterModal
             isOpen={activeModal === "register"}
-            onClose={() => setActiveModal("")}
+            onClose={closeActiveModal}
             onRegister={handleRegister}
             onSwitchToLogin={switchToLogin}
           />
 
           <LoginModal
             isOpen={activeModal === "login"}
-            onClose={() => setActiveModal("")}
+            onClose={closeActiveModal}
             onLogin={handleLogin}
             onSwitchToSignUp={switchToSignUp}
           />
 
           <AddItemModal
-            onClose={() => setActiveModal("")}
+            onClose={closeActiveModal}
             isOpen={activeModal === "add-garment"}
             onAddItem={handleAddItem}
           />
@@ -320,14 +320,13 @@ function App() {
           <ItemModal
             isOpen={activeModal === "preview"}
             card={selectedCard}
-            onClose={() => setActiveModal("")}
+            onClose={closeActiveModal}
             onDeleteItem={handleDeleteItem}
-            setActiveModal={setActiveModal}
           />
 
           <EditProfileModal
             isOpen={activeModal === "edit-profile"}
-            onClose={() => setActiveModal("")}
+            onClose={closeActiveModal}
             currentUser={currentUser}
             onSave={handleProfileUpdate}
           />

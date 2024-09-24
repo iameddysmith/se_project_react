@@ -1,15 +1,14 @@
 const baseUrl = "http://localhost:3001";
 const headers = { "Content-Type": "application/json" };
 
-function checkResponse(res) {
-  if (res.ok) {
-    return res.json();
+const checkResponse = (res) => {
+  if (!res.ok) {
+    return res.json().then((data) => {
+      return Promise.reject(data.message || `Error: ${res.status}`);
+    });
   }
-  return res.text().then((text) => {
-    console.error("Error response:", text);
-    throw new Error(text);
-  });
-}
+  return res.json();
+};
 
 function getItems() {
   return fetch(`${baseUrl}/items`, {
