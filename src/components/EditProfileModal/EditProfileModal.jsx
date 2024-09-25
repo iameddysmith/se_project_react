@@ -1,12 +1,15 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useContext } from "react";
 import "./EditProfileModal.css";
 import ModalWithForm from "../ModalWithForm/ModalWithForm";
 import { useFormAndValidation } from "../../hooks/useFormAndValidation";
+import CurrentUserContext from "../../contexts/CurrentUserContext";
 
-const EditProfileModal = ({ isOpen, onClose, currentUser, onSave }) => {
+const EditProfileModal = ({ isOpen, onClose, onSave }) => {
   const formRef = useRef();
   const { values, handleChange, errors, isValid, resetForm } =
     useFormAndValidation(formRef);
+
+  const currentUser = useContext(CurrentUserContext);
 
   const formId = "editProfileModal";
 

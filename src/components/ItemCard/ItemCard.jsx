@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
 import "./ItemCard.css";
+import CurrentUserContext from "../../contexts/CurrentUserContext";
 
-function ItemCard({ item, onCardClick, onLikeClick, currentUser }) {
+function ItemCard({ item, onCardClick, onLikeClick }) {
+  const currentUser = useContext(CurrentUserContext);
   const isDefaultItem = !item.owner;
   const isLiked =
     currentUser && item.likes
@@ -17,7 +19,7 @@ function ItemCard({ item, onCardClick, onLikeClick, currentUser }) {
             className={`card__react-button ${
               isLiked ? "card__react-button_active" : ""
             }`}
-            onClick={(e) => {
+            onClick={() => {
               onLikeClick(item);
             }}
           />

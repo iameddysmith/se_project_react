@@ -31,7 +31,6 @@ function ClothesSection({
                 item={item}
                 onCardClick={handleCardClick}
                 onLikeClick={onCardLike}
-                currentUser={currentUser}
               />
             ))
           : clothingItems.map((item) => (
@@ -40,7 +39,6 @@ function ClothesSection({
                 item={item}
                 onCardClick={handleCardClick}
                 onLikeClick={onCardLike}
-                currentUser={currentUser}
               />
             ))}
       </ul>

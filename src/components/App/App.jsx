@@ -206,7 +206,6 @@ function App() {
                     handleCardClick={handleCardClick}
                     clothingItems={clothingItems}
                     onCardLike={handleCardLike}
-                    currentUser={currentUser}
                     isLoggedIn={isLoggedIn}
                   />
                 }
@@ -279,7 +278,6 @@ function App() {
           <EditProfileModal
             isOpen={activeModal === "edit-profile"}
             onClose={closeActiveModal}
-            currentUser={currentUser}
             onSave={handleProfileUpdate}
           />
 

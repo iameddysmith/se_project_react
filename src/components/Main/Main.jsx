@@ -3,15 +3,11 @@ import WeatherCard from "../WeatherCard/WeatherCard";
 import ItemCard from "../ItemCard/ItemCard";
 import "./Main.css";
 import { CurrentTemperatureUnitContext } from "../../contexts/CurrentTemperatureUnitContext";
+import CurrentUserContext from "../../contexts/CurrentUserContext";
 
-function Main({
-  weatherData,
-  handleCardClick,
-  clothingItems,
-  onCardLike,
-  currentUser,
-}) {
+function Main({ weatherData, handleCardClick, clothingItems, onCardLike }) {
   const { currentTemperatureUnit } = useContext(CurrentTemperatureUnitContext);
+  const currentUser = useContext(CurrentUserContext);
   const temp = weatherData?.temp?.[currentTemperatureUnit] || 999;
   const [loading, setLoading] = useState(true);
 
@@ -49,7 +45,6 @@ function Main({
                   item={item}
                   onCardClick={handleCardClick}
                   onLikeClick={onCardLike}
-                  currentUser={currentUser}
                 />
               ))
           )}
