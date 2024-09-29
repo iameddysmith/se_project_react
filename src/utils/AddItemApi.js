@@ -1,4 +1,4 @@
-const baseUrl = "http://localhost:3001";
+import { BASE_URL } from "../utils/constants";
 const headers = { "Content-Type": "application/json" };
 
 const checkResponse = (res) => {
@@ -11,7 +11,7 @@ const checkResponse = (res) => {
 };
 
 function getItems() {
-  return fetch(`${baseUrl}/items`, {
+  return fetch(`${BASE_URL}/items`, {
     headers: headers,
   })
     .then(checkResponse)
@@ -20,9 +20,10 @@ function getItems() {
       throw error;
     });
 }
+
 function postItems(name, imageUrl, weather, userId) {
   const token = localStorage.getItem("jwt");
-  return fetch(`${baseUrl}/items`, {
+  return fetch(`${BASE_URL}/items`, {
     method: "POST",
     headers: {
       ...headers,
@@ -44,7 +45,7 @@ function postItems(name, imageUrl, weather, userId) {
 
 function deleteItem(item) {
   const token = localStorage.getItem("jwt");
-  return fetch(`${baseUrl}/items/${item._id}`, {
+  return fetch(`${BASE_URL}/items/${item._id}`, {
     method: "DELETE",
     headers: {
       ...headers,
@@ -54,7 +55,7 @@ function deleteItem(item) {
 }
 
 function addCardLike(cardId, token) {
-  return fetch(`${baseUrl}/items/${cardId}/likes`, {
+  return fetch(`${BASE_URL}/items/${cardId}/likes`, {
     method: "PUT",
     headers: {
       ...headers,
@@ -64,7 +65,7 @@ function addCardLike(cardId, token) {
 }
 
 function removeCardLike(cardId, token) {
-  return fetch(`${baseUrl}/items/${cardId}/likes`, {
+  return fetch(`${BASE_URL}/items/${cardId}/likes`, {
     method: "DELETE",
     headers: {
       ...headers,
@@ -75,7 +76,7 @@ function removeCardLike(cardId, token) {
 
 function fetchUserItems(userId) {
   const token = localStorage.getItem("jwt");
-  return fetch(`${baseUrl}/items?owner=${userId}`, {
+  return fetch(`${BASE_URL}/items?owner=${userId}`, {
     headers: {
       ...headers,
       Authorization: `Bearer ${token}`,

@@ -5,6 +5,11 @@ export const coordinates = {
 
 export const APIkey = "da6f40b14c798d1e3e13b03b020a4d37";
 
+export const BASE_URL =
+  process.env.NODE_ENV === "production"
+    ? "https://api.wtwr.codemare.com"
+    : "http://localhost:3001";
+
 export const weatherConditions = [
   {
     isDay: true,
